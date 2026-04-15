@@ -5,7 +5,7 @@ tests/
 # Config
 tsconfig.json
 .github/
-.contextforge/
+.code2context/
 .eslintrc*
 .prettierrc*
 vitest.config.*

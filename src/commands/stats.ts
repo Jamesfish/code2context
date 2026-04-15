@@ -1,5 +1,5 @@
 /**
- * `contextforge stats` command — Show context statistics.
+ * `code2context stats` command — Show context statistics.
  */
 
 import chalk from 'chalk';
@@ -9,16 +9,16 @@ import type { ProjectContext, StatsOptions } from '../types.js';
 
 export async function statsCommand(options: StatsOptions): Promise<void> {
     const projectDir = resolve(options.dir);
-    const contextPath = join(projectDir, '.contextforge', 'context.json');
+    const contextPath = join(projectDir, '.code2context', 'context.json');
 
     if (!existsSync(contextPath)) {
-        console.error(chalk.red('\n❌ No context found. Run `contextforge init` first.\n'));
+        console.error(chalk.red('\n❌ No context found. Run `code2context init` first.\n'));
         process.exit(1);
     }
 
     const context: ProjectContext = JSON.parse(readFileSync(contextPath, 'utf-8'));
 
-    console.log(chalk.bold(`\n📊 ContextForge Stats — ${context.meta.name}\n`));
+    console.log(chalk.bold(`\n📊 Code2Context Stats — ${context.meta.name}\n`));
 
     // Project info
     console.log(chalk.bold('  Project'));

@@ -1,5 +1,5 @@
 /**
- * `contextforge export` command — Export context to various AI tool formats.
+ * `code2context export` command — Export context to various AI tool formats.
  */
 
 import chalk from 'chalk';
@@ -17,11 +17,11 @@ const FORMAT_CONFIG: Record<string, { filename: string; exporter: (ctx: ProjectC
 
 export async function exportCommand(options: ExportOptions): Promise<void> {
     const projectDir = resolve(options.dir);
-    const contextPath = join(projectDir, '.contextforge', 'context.json');
+    const contextPath = join(projectDir, '.code2context', 'context.json');
 
     // Check if context exists
     if (!existsSync(contextPath)) {
-        console.error(chalk.red('\n❌ No context found. Run `contextforge init` first.\n'));
+        console.error(chalk.red('\n❌ No context found. Run `code2context init` first.\n'));
         process.exit(1);
     }
 

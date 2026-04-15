@@ -17,7 +17,7 @@ const DEFAULT_IGNORE = [
     'yarn.lock', 'pnpm-lock.yaml', '.env', '.env.*',
     'coverage', '.nyc_output', '.cache', '.turbo',
     '*.min.js', '*.min.css', '*.map', '*.chunk.*',
-    '.contextforge',
+    '.code2context',
 ];
 
 /** Language detection by file extension */

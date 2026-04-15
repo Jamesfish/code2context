@@ -3,33 +3,33 @@
  *
  * Supports ANY OpenAI-compatible API provider via environment variables:
  *
- *   CONTEXTFORGE_API_KEY     — API key (required for AI analysis)
- *   CONTEXTFORGE_BASE_URL    — API base URL (optional, defaults to OpenAI)
- *   CONTEXTFORGE_MODEL       — Model name (optional, defaults to "gpt-4o-mini")
+ *   CODE2CONTEXT_API_KEY     — API key (required for AI analysis)
+ *   CODE2CONTEXT_BASE_URL    — API base URL (optional, defaults to OpenAI)
+ *   CODE2CONTEXT_MODEL       — Model name (optional, defaults to "gpt-4o-mini")
  *
  * Examples:
  *   # OpenAI (default)
- *   export CONTEXTFORGE_API_KEY=sk-xxx
+ *   export CODE2CONTEXT_API_KEY=sk-xxx
  *
  *   # DeepSeek
- *   export CONTEXTFORGE_API_KEY=sk-xxx
- *   export CONTEXTFORGE_BASE_URL=https://api.deepseek.com
- *   export CONTEXTFORGE_MODEL=deepseek-chat
+ *   export CODE2CONTEXT_API_KEY=sk-xxx
+ *   export CODE2CONTEXT_BASE_URL=https://api.deepseek.com
+ *   export CODE2CONTEXT_MODEL=deepseek-chat
  *
  *   # OpenRouter (access 100+ models)
- *   export CONTEXTFORGE_API_KEY=sk-or-xxx
- *   export CONTEXTFORGE_BASE_URL=https://openrouter.ai/api/v1
- *   export CONTEXTFORGE_MODEL=anthropic/claude-3.5-sonnet
+ *   export CODE2CONTEXT_API_KEY=sk-or-xxx
+ *   export CODE2CONTEXT_BASE_URL=https://openrouter.ai/api/v1
+ *   export CODE2CONTEXT_MODEL=anthropic/claude-3.5-sonnet
  *
  *   # Ollama (local, free)
- *   export CONTEXTFORGE_API_KEY=ollama
- *   export CONTEXTFORGE_BASE_URL=http://localhost:11434/v1
- *   export CONTEXTFORGE_MODEL=llama3
+ *   export CODE2CONTEXT_API_KEY=ollama
+ *   export CODE2CONTEXT_BASE_URL=http://localhost:11434/v1
+ *   export CODE2CONTEXT_MODEL=llama3
  *
  *   # Any other OpenAI-compatible provider (Together, Groq, Mistral, etc.)
- *   export CONTEXTFORGE_API_KEY=xxx
- *   export CONTEXTFORGE_BASE_URL=https://api.together.xyz/v1
- *   export CONTEXTFORGE_MODEL=meta-llama/Llama-3-70b-chat-hf
+ *   export CODE2CONTEXT_API_KEY=xxx
+ *   export CODE2CONTEXT_BASE_URL=https://api.together.xyz/v1
+ *   export CODE2CONTEXT_MODEL=meta-llama/Llama-3-70b-chat-hf
  *
  * Legacy support: DEEPSEEK_API_KEY and OPENAI_API_KEY are still recognized
  * as fallbacks for backward compatibility.
@@ -43,7 +43,7 @@ import {
 } from '../config.js';
 import type { AISummary, ProjectContext } from '../types.js';
 
-const SYSTEM_PROMPT = `You are ContextForge, an AI that analyzes codebases to generate structured context for other AI coding assistants.
+const SYSTEM_PROMPT = `You are Code2Context, an AI that analyzes codebases to generate structured context for other AI coding assistants.
 
 Your job is to produce a concise, actionable project summary that helps AI assistants understand:
 1. What this project does (one paragraph)

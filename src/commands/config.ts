@@ -1,11 +1,11 @@
 /**
- * `contextforge config` command — Manage configuration.
+ * `code2context config` command — Manage configuration.
  *
  * Subcommands:
- *   contextforge config init              → Generate .contextforge/config.json interactively
- *   contextforge config show              → Show current resolved config
- *   contextforge config path              → Show config file locations
- *   contextforge config set <key> <value> → Set a config value
+ *   code2context config init              → Generate .code2context/config.json interactively
+ *   code2context config show              → Show current resolved config
+ *   code2context config path              → Show config file locations
+ *   code2context config set <key> <value> → Set a config value
  */
 
 import chalk from 'chalk';
@@ -17,7 +17,7 @@ import {
     loadConfig,
     PROVIDER_PRESETS,
     resolveAIConfig,
-    type ContextForgeConfig,
+    type Code2ContextConfig,
 } from '../config.js';
 
 export interface ConfigOptions {
@@ -25,11 +25,11 @@ export interface ConfigOptions {
     global?: boolean;
 }
 
-/** `contextforge config init` — Generate a config file */
+/** `code2context config init` — Generate a config file */
 export async function configInitCommand(options: ConfigOptions): Promise<void> {
     const projectDir = resolve(options.dir);
 
-    console.log(chalk.bold('\n⚙️  ContextForge — Config Setup\n'));
+    console.log(chalk.bold('\n⚙️  Code2Context — Config Setup\n'));
 
     // Show available providers
     console.log(chalk.bold('  Available AI providers:\n'));
@@ -45,11 +45,11 @@ export async function configInitCommand(options: ConfigOptions): Promise<void> {
     // Determine output path
     let configPath: string;
     if (options.global) {
-        const globalDir = join(process.env.HOME || process.env.USERPROFILE || '~', '.config', 'contextforge');
+        const globalDir = join(process.env.HOME || process.env.USERPROFILE || '~', '.config', 'code2context');
         if (!existsSync(globalDir)) mkdirSync(globalDir, { recursive: true });
         configPath = join(globalDir, 'config.json');
     } else {
-        const contextDir = join(projectDir, '.contextforge');
+        const contextDir = join(projectDir, '.code2context');
         if (!existsSync(contextDir)) mkdirSync(contextDir, { recursive: true });
         configPath = join(contextDir, 'config.json');
     }
@@ -57,8 +57,8 @@ export async function configInitCommand(options: ConfigOptions): Promise<void> {
     // Check if file already exists
     if (existsSync(configPath)) {
         console.log(chalk.yellow(`  ⚠ Config file already exists: ${configPath}`));
-        console.log(chalk.dim('    Use `contextforge config show` to view current config'));
-        console.log(chalk.dim('    Edit the file directly or use `contextforge config set`\n'));
+        console.log(chalk.dim('    Use `code2context config show` to view current config'));
+        console.log(chalk.dim('    Edit the file directly or use `code2context config set`\n'));
         return;
     }
 
@@ -77,7 +77,7 @@ export async function configInitCommand(options: ConfigOptions): Promise<void> {
     // Security reminder
     console.log(chalk.bold('  🔑 API Key setup:\n'));
     console.log('    Option A (recommended): Use environment variable');
-    console.log(chalk.dim('      export CONTEXTFORGE_API_KEY=sk-xxx\n'));
+    console.log(chalk.dim('      export CODE2CONTEXT_API_KEY=sk-xxx\n'));
     console.log('    Option B: Add to config file (⚠️ add to .gitignore!)');
     console.log(chalk.dim('      Edit the config file and add "apiKey": "sk-xxx" under "ai"\n'));
 
@@ -86,22 +86,22 @@ export async function configInitCommand(options: ConfigOptions): Promise<void> {
         const gitignorePath = join(projectDir, '.gitignore');
         if (existsSync(gitignorePath)) {
             const content = readFileSync(gitignorePath, 'utf-8');
-            if (!content.includes('.contextforge')) {
-                console.log(chalk.yellow('  ⚠ Remember to add .contextforge/ to your .gitignore'));
+            if (!content.includes('.code2context')) {
+                console.log(chalk.yellow('  ⚠ Remember to add .code2context/ to your .gitignore'));
                 console.log(chalk.dim('    (especially if you put API keys in the config file)\n'));
             }
         }
     }
 }
 
-/** `contextforge config show` — Show resolved config */
+/** `code2context config show` — Show resolved config */
 export async function configShowCommand(options: ConfigOptions): Promise<void> {
     const projectDir = resolve(options.dir);
     const config = loadConfig(projectDir);
     const aiConfig = resolveAIConfig(config);
     const activeFile = findActiveConfigFile(projectDir);
 
-    console.log(chalk.bold('\n⚙️  ContextForge — Current Configuration\n'));
+    console.log(chalk.bold('\n⚙️  Code2Context — Current Configuration\n'));
 
     // Config source
     if (activeFile) {
@@ -121,7 +121,7 @@ export async function configShowCommand(options: ConfigOptions): Promise<void> {
         console.log(chalk.green('    Status:    ✅ Ready'));
     } else {
         console.log(chalk.yellow('    Status:    ⚠ No API key configured'));
-        console.log(chalk.dim('    Set CONTEXTFORGE_API_KEY or add apiKey to config file'));
+        console.log(chalk.dim('    Set CODE2CONTEXT_API_KEY or add apiKey to config file'));
     }
     console.log('');
 
@@ -139,20 +139,20 @@ export async function configShowCommand(options: ConfigOptions): Promise<void> {
 
     // Config file locations
     console.log(chalk.bold('  📍 Config file search paths (in priority order):'));
-    console.log(chalk.dim('    1. .contextforge/config.json        (project, highest priority)'));
-    console.log(chalk.dim('    2. contextforge.config.json          (project root)'));
-    console.log(chalk.dim('    3. ~/.config/contextforge/config.json (global, lowest priority)'));
+    console.log(chalk.dim('    1. .code2context/config.json        (project, highest priority)'));
+    console.log(chalk.dim('    2. code2context.config.json          (project root)'));
+    console.log(chalk.dim('    3. ~/.config/code2context/config.json (global, lowest priority)'));
     console.log('');
 }
 
-/** `contextforge config set` — Set a config value */
+/** `code2context config set` — Set a config value */
 export async function configSetCommand(key: string, value: string, options: ConfigOptions): Promise<void> {
     const projectDir = resolve(options.dir);
-    const contextDir = join(projectDir, '.contextforge');
+    const contextDir = join(projectDir, '.code2context');
     const configPath = join(contextDir, 'config.json');
 
     // Load existing or create new
-    let config: Partial<ContextForgeConfig> = {};
+    let config: Partial<Code2ContextConfig> = {};
     if (existsSync(configPath)) {
         try {
             config = JSON.parse(readFileSync(configPath, 'utf-8'));

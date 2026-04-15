@@ -11,9 +11,9 @@ import { updateCommand } from './commands/update.js';
 const program = new Command();
 
 program
-    .name('contextforge')
+    .name('code2context')
     .description(
-        chalk.bold('🔥 ContextForge') +
+        chalk.bold('🔮 Code2Context') +
         ' — AI-powered codebase context management.\n' +
         'Smart extraction, persistence, and cross-tool sync for AI coding assistants.'
     )
@@ -53,13 +53,13 @@ program
 // Config command group
 const configCmd = program
     .command('config')
-    .description('Manage ContextForge configuration');
+    .description('Manage Code2Context configuration');
 
 configCmd
     .command('init')
-    .description('Generate a config file (.contextforge/config.json)')
+    .description('Generate a config file (.code2context/config.json)')
     .option('-d, --dir <path>', 'Project directory', '.')
-    .option('-g, --global', 'Create global config (~/.config/contextforge/config.json)')
+    .option('-g, --global', 'Create global config (~/.config/code2context/config.json)')
     .action(configInitCommand);
 
 configCmd

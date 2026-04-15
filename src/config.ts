@@ -1,14 +1,14 @@
 /**
- * Configuration loader for ContextForge.
+ * Configuration loader for Code2Context.
  *
  * Config resolution order (later overrides earlier):
  *   1. Built-in defaults
- *   2. Global config:  ~/.config/contextforge/config.json
- *   3. Project config: .contextforge/config.json  (or contextforge.config.json)
- *   4. Environment variables: CONTEXTFORGE_*
+ *   2. Global config:  ~/.config/code2context/config.json
+ *   3. Project config: .code2context/config.json  (or code2context.config.json)
+ *   4. Environment variables: CODE2CONTEXT_*
  *   5. CLI flags (handled by commander, not here)
  *
- * Config file format (.contextforge/config.json):
+ * Config file format (.code2context/config.json):
  * {
  *   "ai": {
  *     "provider": "deepseek",          // preset name or "custom"
@@ -33,7 +33,7 @@ import { join, resolve } from 'path';
 
 // ─── Types ───────────────────────────────────────────────────────────
 
-export interface ContextForgeConfig {
+export interface Code2ContextConfig {
     ai: AIConfig;
     scan: ScanConfig;
     export: ExportConfig;
@@ -42,7 +42,7 @@ export interface ContextForgeConfig {
 export interface AIConfig {
     /** Provider preset name, or "custom" for manual baseURL */
     provider: string;
-    /** API key (prefer env var CONTEXTFORGE_API_KEY for security) */
+    /** API key (prefer env var CODE2CONTEXT_API_KEY for security) */
     apiKey?: string;
     /** API base URL (auto-resolved for known providers) */
     baseURL?: string;
@@ -91,7 +91,7 @@ const LEGACY_ENV_MAP: Record<string, string> = {
 
 // ─── Defaults ────────────────────────────────────────────────────────
 
-const DEFAULT_CONFIG: ContextForgeConfig = {
+const DEFAULT_CONFIG: Code2ContextConfig = {
     ai: {
         provider: 'openai',
     },
@@ -111,20 +111,20 @@ function getConfigPaths(projectDir: string): string[] {
     const cwd = resolve('.');
     const paths = [
         // Global config (lowest priority)
-        join(homedir(), '.config', 'contextforge', 'config.json'),
+        join(homedir(), '.config', 'code2context', 'config.json'),
     ];
 
     // If CWD differs from projectDir, also load CWD config (middle priority)
-    // This allows running `contextforge init --dir /other/project` while
-    // keeping your API key config in the CWD's .contextforge/config.json
+    // This allows running `code2context init --dir /other/project` while
+    // keeping your API key config in the CWD's .code2context/config.json
     if (cwd !== resolve(projectDir)) {
-        paths.push(join(cwd, 'contextforge.config.json'));
-        paths.push(join(cwd, '.contextforge', 'config.json'));
+        paths.push(join(cwd, 'code2context.config.json'));
+        paths.push(join(cwd, '.code2context', 'config.json'));
     }
 
     // Project-level configs (highest priority)
-    paths.push(join(projectDir, 'contextforge.config.json'));
-    paths.push(join(projectDir, '.contextforge', 'config.json'));
+    paths.push(join(projectDir, 'code2context.config.json'));
+    paths.push(join(projectDir, '.code2context', 'config.json'));
 
     return paths;
 }
@@ -148,7 +148,7 @@ function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>)
 }
 
 /** Load a single JSON config file, returns null if not found or invalid */
-function loadConfigFile(path: string): Partial<ContextForgeConfig> | null {
+function loadConfigFile(path: string): Partial<Code2ContextConfig> | null {
     if (!existsSync(path)) return null;
     try {
         const raw = readFileSync(path, 'utf-8');
@@ -163,9 +163,9 @@ function loadConfigFile(path: string): Partial<ContextForgeConfig> | null {
  *
  * Resolution: defaults → global file → project file → env vars
  */
-export function loadConfig(projectDir: string = '.'): ContextForgeConfig {
+export function loadConfig(projectDir: string = '.'): Code2ContextConfig {
     const absDir = resolve(projectDir);
-    let config: ContextForgeConfig = structuredClone(DEFAULT_CONFIG);
+    let config: Code2ContextConfig = structuredClone(DEFAULT_CONFIG);
 
     // Layer config files (global → project)
     for (const path of getConfigPaths(absDir)) {
@@ -176,18 +176,18 @@ export function loadConfig(projectDir: string = '.'): ContextForgeConfig {
     }
 
     // Layer environment variables (highest priority for AI config)
-    if (process.env.CONTEXTFORGE_API_KEY) {
-        config.ai.apiKey = process.env.CONTEXTFORGE_API_KEY;
+    if (process.env.CODE2CONTEXT_API_KEY) {
+        config.ai.apiKey = process.env.CODE2CONTEXT_API_KEY;
     }
-    if (process.env.CONTEXTFORGE_BASE_URL) {
-        config.ai.baseURL = process.env.CONTEXTFORGE_BASE_URL;
+    if (process.env.CODE2CONTEXT_BASE_URL) {
+        config.ai.baseURL = process.env.CODE2CONTEXT_BASE_URL;
         config.ai.provider = 'custom';
     }
-    if (process.env.CONTEXTFORGE_MODEL) {
-        config.ai.model = process.env.CONTEXTFORGE_MODEL;
+    if (process.env.CODE2CONTEXT_MODEL) {
+        config.ai.model = process.env.CODE2CONTEXT_MODEL;
     }
-    if (process.env.CONTEXTFORGE_PROVIDER) {
-        config.ai.provider = process.env.CONTEXTFORGE_PROVIDER;
+    if (process.env.CODE2CONTEXT_PROVIDER) {
+        config.ai.provider = process.env.CODE2CONTEXT_PROVIDER;
     }
 
     return config;
@@ -198,7 +198,7 @@ export function loadConfig(projectDir: string = '.'): ContextForgeConfig {
  *
  * Priority: env vars > config file > legacy env vars > null
  */
-export function resolveAIConfig(config: ContextForgeConfig): ResolvedAIConfig | null {
+export function resolveAIConfig(config: Code2ContextConfig): ResolvedAIConfig | null {
     const ai = config.ai;
 
     // If we have an explicit API key (from config or env), use it
@@ -232,7 +232,7 @@ export function resolveAIConfig(config: ContextForgeConfig): ResolvedAIConfig | 
  * Find which config file is currently active for a project.
  * Returns the path and parsed content, or null.
  */
-export function findActiveConfigFile(projectDir: string = '.'): { path: string; config: Partial<ContextForgeConfig> } | null {
+export function findActiveConfigFile(projectDir: string = '.'): { path: string; config: Partial<Code2ContextConfig> } | null {
     const absDir = resolve(projectDir);
     // Check in reverse priority order, return the highest priority one found
     const paths = getConfigPaths(absDir).reverse();
@@ -246,7 +246,7 @@ export function findActiveConfigFile(projectDir: string = '.'): { path: string; 
 /**
  * Generate a config file template.
  */
-export function generateConfigTemplate(provider: string = 'deepseek'): ContextForgeConfig {
+export function generateConfigTemplate(provider: string = 'deepseek'): Code2ContextConfig {
     const preset = PROVIDER_PRESETS[provider];
     return {
         ai: {

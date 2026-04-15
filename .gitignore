@@ -1,6 +1,7 @@
 node_modules/
 dist/
-.contextforge/
+.code2context/
+package-lock.json
 *.tgz
 
 # Environment

@@ -1,5 +1,5 @@
 /**
- * `contextforge update` command — Incrementally update context based on git changes.
+ * `code2context update` command — Incrementally update context based on git changes.
  */
 
 import chalk from 'chalk';
@@ -14,17 +14,17 @@ import type { ProjectContext, UpdateOptions } from '../types.js';
 
 export async function updateCommand(options: UpdateOptions): Promise<void> {
     const projectDir = resolve(options.dir);
-    const contextDir = join(projectDir, '.contextforge');
+    const contextDir = join(projectDir, '.code2context');
     const contextPath = join(contextDir, 'context.json');
     const scanMetaPath = join(contextDir, '.scan-meta.json');
 
     // Check if context exists
     if (!existsSync(contextPath)) {
-        console.error(chalk.red('\n❌ No context found. Run `contextforge init` first.\n'));
+        console.error(chalk.red('\n❌ No context found. Run `code2context init` first.\n'));
         process.exit(1);
     }
 
-    console.log(chalk.bold('\n🔄 ContextForge — Updating project context\n'));
+    console.log(chalk.bold('\n🔄 Code2Context — Updating project context\n'));
 
     const startTime = Date.now();
 
@@ -63,7 +63,7 @@ export async function updateCommand(options: UpdateOptions): Promise<void> {
         const context: ProjectContext = {
             meta, structure, conventions, gitInsights, aiSummary,
             generated: {
-                tool: 'contextforge',
+                tool: 'code2context',
                 version: '0.1.0',
                 timestamp: new Date().toISOString(),
                 scanDuration: duration,
@@ -104,7 +104,7 @@ export async function updateCommand(options: UpdateOptions): Promise<void> {
         const context: ProjectContext = {
             meta, structure, conventions, gitInsights, aiSummary,
             generated: {
-                tool: 'contextforge',
+                tool: 'code2context',
                 version: '0.1.0',
                 timestamp: new Date().toISOString(),
                 scanDuration: duration,
@@ -132,6 +132,6 @@ export async function updateCommand(options: UpdateOptions): Promise<void> {
     writeFileSync(scanMetaPath, JSON.stringify(scanMeta, null, 2), 'utf-8');
 
     console.log(chalk.bold('\n✅ Context updated!\n'));
-    console.log(chalk.dim('  Run `contextforge export` to regenerate AI tool files.'));
+    console.log(chalk.dim('  Run `code2context export` to regenerate AI tool files.'));
     console.log('');
 }

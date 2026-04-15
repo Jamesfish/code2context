@@ -1,32 +1,36 @@
 {
-    "name": "contextforge",
+    "name": "code2context",
     "version": "0.1.0",
-    "description": "AI-powered codebase context management. Smart extraction, persistence, and cross-tool sync for AI coding assistants.",
+    "description": "Auto-extract structured codebase context for AI coding assistants. Zero-config, one command, real code analysis.",
     "keywords": [
         "ai",
         "context",
         "codebase",
         "cursor",
+        "cursorrules",
         "copilot",
         "claude",
         "coding-assistant",
         "developer-tools",
-        "cli"
+        "cli",
+        "code-analysis",
+        "module-graph",
+        "git-insights"
     ],
-    "author": "ContextForge Contributors",
+    "author": "Jamesfish",
     "license": "MIT",
-    "homepage": "https://github.com/Jamesfish/contextforge#readme",
+    "homepage": "https://github.com/Jamesfish/code2context#readme",
     "bugs": {
-        "url": "https://github.com/Jamesfish/contextforge/issues"
+        "url": "https://github.com/Jamesfish/code2context/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Jamesfish/contextforge.git"
+        "url": "git+https://github.com/Jamesfish/code2context.git"
     },
     "type": "module",
     "main": "dist/cli.js",
     "bin": {
-        "contextforge": "dist/cli.js"
+        "code2context": "dist/cli.js"
     },
     "files": [
         "dist",

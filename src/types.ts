@@ -1,5 +1,5 @@
 /**
- * Core types for ContextForge
+ * Core types for Code2Context
  */
 
 /** Represents the full project context */
